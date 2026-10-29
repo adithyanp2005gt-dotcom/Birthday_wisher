@@ -1,0 +1,37 @@
+:root {
+  /* Color Palette - Midnight, Deep Rose Burgundy & Gold */
+  --bg-midnight: #070308;
+  --bg-deep-violet: #0f0612;
+  --bg-burgundy-dark: #1f0610;
+  --bg-velvet: #2e0918;
+
+  --rose-crimson: #800e2b;
+  --rose-ruby: #a61238;
+  --rose-petal: #d92550;
+  --rose-blush: #f4728f;
+  --rose-dew: #ffccd5;
+
+  --gold-primary: #d4af37;
+  --gold-warm: #f3cf7a;
+  --gold-shimmer: #fff1c2;
+  --gold-glow: rgba(212, 175, 55, 0.28);
+  --rose-glow: rgba(217, 37, 80, 0.25);
+
+  --text-primary: #fdfbf7;
+  --text-secondary: #d8c8d0;
+  --text-muted: #8e7d86;
+  --text-gold: #f3cf7a;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(20, 8, 16, 0.65);
+  --glass-border: rgba(212, 175, 55, 0.18);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Cinzel', serif;
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Transitions */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+}

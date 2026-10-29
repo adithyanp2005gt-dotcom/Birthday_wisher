@@ -1,0 +1,81 @@
+/* EditableText.css — Seamless in-place UI editing */
+
+.inline-editable-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, outline 0.2s ease;
+  outline: 1px dashed transparent;
+  max-width: 100%;
+}
+
+.inline-editable-wrapper:hover {
+  background-color: rgba(212, 175, 55, 0.08);
+  outline: 1px dashed rgba(212, 175, 55, 0.45);
+}
+
+.inline-editable-text {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.inline-edit-indicator {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.35rem;
+  opacity: 0;
+  transform: translateY(-1px);
+  color: var(--gold-primary, #d4af37);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.inline-editable-wrapper:hover .inline-edit-indicator,
+.inline-editable-wrapper:focus .inline-edit-indicator {
+  opacity: 0.85;
+  transform: translateY(0);
+}
+
+/* Focused Active Input in the UI */
+.inline-editable-input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--text-primary, #fff);
+  background: rgba(30, 8, 20, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  border-radius: 6px;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  outline: none;
+  padding: 0.15rem 0.45rem;
+  box-sizing: border-box;
+  width: 100%;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.inline-editable-textarea {
+  resize: vertical;
+  min-height: 2.2em;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    border-color: rgba(212, 175, 55, 0.6);
+  }
+  50% {
+    border-color: rgba(255, 215, 112, 0.9);
+  }
+}

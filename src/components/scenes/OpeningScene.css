@@ -1,0 +1,342 @@
+/* ==========================================================================
+   OpeningScene.css — Project AMMA: The Digital Rose Garden
+   Luxury Editorial Aesthetic | Cinematic Burgundy, Midnight & Warm Gold
+   ========================================================================== */
+
+.opening-scene-container {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 1.5rem 2.5rem;
+  overflow: hidden;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* Ambient Radial Lighting Overlays */
+.ambient-lighting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 50% 38%, rgba(166, 18, 56, 0.28) 0%, rgba(90, 10, 32, 0.16) 45%, transparent 75%),
+    radial-gradient(circle at 50% 85%, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+  animation: ambientBreathe 10s ease-in-out infinite alternate;
+}
+
+@keyframes ambientBreathe {
+  0% { opacity: 0.75; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1.02); }
+}
+
+/* Central Composition Stage */
+.opening-content-stage {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: auto 0;
+}
+
+/* --------------------------------------------------------------------------
+   Rose Artwork & Backlight
+   -------------------------------------------------------------------------- */
+.rose-artwork-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .rose-artwork-wrapper {
+    width: 320px;
+    height: 320px;
+    margin-bottom: 2rem;
+  }
+}
+
+.rose-backlight {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 37, 80, 0.42) 0%, rgba(128, 14, 43, 0.25) 50%, transparent 75%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rose-gold-corona {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 208, 112, 0.22) 0%, rgba(212, 175, 55, 0.08) 50%, transparent 70%);
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rose-svg-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.65));
+}
+
+.rose-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------------------
+   Typography & Copywriting
+   -------------------------------------------------------------------------- */
+.opening-intro-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.25rem;
+  border-radius: 9999px;
+  background: rgba(26, 8, 16, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  color: var(--gold-warm);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.pill-sparkle {
+  color: var(--gold-warm);
+  opacity: 0.85;
+}
+
+.opening-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 7vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  color: #fff9f0;
+  margin-bottom: 1rem;
+  text-shadow: 
+    0 2px 14px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(217, 37, 80, 0.22);
+}
+
+.opening-heading-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--rose-blush);
+  padding-left: 0.15em;
+  display: inline-block;
+  background: linear-gradient(135deg, #ffd3de 10%, #f4728f 60%, #e6395e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.opening-supporting-text {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  max-width: 580px;
+  margin: 0 auto 2.5rem;
+  opacity: 0.92;
+}
+
+/* --------------------------------------------------------------------------
+   Primary Button — Luxury Gold & Velvet Aesthetics
+   -------------------------------------------------------------------------- */
+.enter-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.enter-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #1a060d;
+  background: linear-gradient(135deg, #ffe296 0%, #d4af37 50%, #b88a1e 100%);
+  border: 1px solid rgba(255, 240, 190, 0.5);
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 24px rgba(212, 175, 55, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  transition: all 0.4s var(--ease-cinematic);
+  outline: none;
+  overflow: hidden;
+}
+
+.enter-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.75s ease;
+}
+
+.enter-button:hover::before {
+  left: 120%;
+}
+
+.enter-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(212, 175, 55, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 248, 220, 0.8);
+}
+
+.enter-button:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 4px 16px rgba(212, 175, 55, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button-icon-aura {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.enter-button:hover .button-icon-aura {
+  transform: translateX(4px);
+}
+
+/* --------------------------------------------------------------------------
+   Scene Transition Overlay (Triggered upon button click)
+   -------------------------------------------------------------------------- */
+.transition-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(30, 6, 16, 0.95) 0%, #070308 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  text-align: center;
+  padding: 2rem;
+}
+
+.transition-message {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--gold-warm);
+  margin-top: 1.5rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+}
+
+.transition-subtext {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rose-blush);
+  margin-top: 0.75rem;
+  opacity: 0.8;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.opening-footer {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.footer-heart {
+  color: #a61238;
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.opening-footer:hover .footer-heart {
+  transform: scale(1.15);
+  color: #d92550;
+}
+
+/* --------------------------------------------------------------------------
+   Prefers Reduced Motion Adaptation
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-lighting {
+    animation: none;
+  }
+  .enter-button::before {
+    display: none;
+  }
+  .enter-button:hover {
+    transform: none;
+  }
+}

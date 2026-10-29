@@ -1,0 +1,302 @@
+/* =========================================================
+   LOGIN PAGE — Rose Garden Studio
+   ========================================================= */
+
+.login-backdrop {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 30%, rgba(59, 10, 26, 0.55) 0%, #070308 80%);
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+/* ---------- Floating petal particles ---------- */
+.login-petals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.login-petal {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  border-radius: 50% 0 50% 0;
+  opacity: 0;
+  animation: petalFall linear infinite;
+}
+
+/* Individual petal colors / positions / speeds */
+.login-petal-1  { background: rgba(212,175,55,0.35); left: 8%;  animation-duration: 9s;  animation-delay: 0s;   width: 7px; height: 10px; }
+.login-petal-2  { background: rgba(166,18,56,0.4);   left: 18%; animation-duration: 12s; animation-delay: 1.5s; }
+.login-petal-3  { background: rgba(212,175,55,0.25); left: 30%; animation-duration: 8s;  animation-delay: 3s;   width: 5px; height: 8px; }
+.login-petal-4  { background: rgba(166,18,56,0.3);   left: 42%; animation-duration: 14s; animation-delay: 0.8s; }
+.login-petal-5  { background: rgba(212,175,55,0.3);  left: 55%; animation-duration: 10s; animation-delay: 2.2s; }
+.login-petal-6  { background: rgba(166,18,56,0.35);  left: 65%; animation-duration: 11s; animation-delay: 4s;   width: 6px; height: 9px; }
+.login-petal-7  { background: rgba(212,175,55,0.2);  left: 75%; animation-duration: 9s;  animation-delay: 1s;   width: 5px; height: 7px; }
+.login-petal-8  { background: rgba(166,18,56,0.4);   left: 85%; animation-duration: 13s; animation-delay: 3.5s; }
+.login-petal-9  { background: rgba(212,175,55,0.35); left: 92%; animation-duration: 8s;  animation-delay: 0.5s; }
+.login-petal-10 { background: rgba(166,18,56,0.25);  left: 25%; animation-duration: 15s; animation-delay: 6s;   width: 6px; height: 10px; }
+.login-petal-11 { background: rgba(212,175,55,0.3);  left: 50%; animation-duration: 10s; animation-delay: 7s;   }
+.login-petal-12 { background: rgba(166,18,56,0.3);   left: 70%; animation-duration: 12s; animation-delay: 2s;   width: 7px; height: 11px; }
+
+@keyframes petalFall {
+  0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ---------- Card ---------- */
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(160deg, rgba(18, 5, 12, 0.97) 0%, rgba(28, 8, 18, 0.97) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 20px;
+  padding: 2.5rem 2rem 2rem;
+  box-shadow:
+    0 0 60px rgba(166, 18, 56, 0.15),
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(212, 175, 55, 0.1);
+}
+
+.login-card-shake {
+  animation: cardShake 0.45s ease;
+}
+
+@keyframes cardShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-7px); }
+  40%       { transform: translateX(7px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* ---------- Branding ---------- */
+.login-brand {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.login-brand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(166, 18, 56, 0.35) 0%, rgba(212, 175, 55, 0.12) 60%, transparent 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  margin: 0 auto 0.85rem;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.2);
+}
+
+.login-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  padding: 4px 10px;
+  margin-bottom: 0.85rem;
+}
+
+.login-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fef3e2;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+  font-size: 0.82rem;
+  color: rgba(254, 243, 226, 0.5);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---------- Form ---------- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(212, 175, 55, 0.85);
+  text-transform: uppercase;
+}
+
+.login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input-icon {
+  position: absolute;
+  left: 12px;
+  color: rgba(212, 175, 55, 0.5);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.login-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 10px;
+  color: #fef3e2;
+  font-size: 0.88rem;
+  padding: 0.65rem 0.9rem 0.65rem 2.35rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  font-family: inherit;
+}
+
+.login-input::placeholder {
+  color: rgba(254, 243, 226, 0.25);
+}
+
+.login-input:focus {
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.login-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.login-input-password {
+  padding-right: 2.6rem;
+}
+
+.login-eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgba(212, 175, 55, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.login-eye-btn:hover {
+  color: #d4af37;
+}
+
+/* ---------- Error ---------- */
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(200, 30, 60, 0.12);
+  border: 1px solid rgba(200, 30, 60, 0.35);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  color: #f08090;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ---------- Submit button ---------- */
+.login-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.78rem 1.2rem;
+  margin-top: 0.4rem;
+  border: none;
+  border-radius: 11px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  background: linear-gradient(135deg, #a61238 0%, #d4af37 100%);
+  color: #fef3e2;
+  box-shadow: 0 4px 18px rgba(166, 18, 56, 0.35), 0 1px 0 rgba(255,255,255,0.08) inset;
+  transition: opacity 0.2s, transform 0.18s, box-shadow 0.2s;
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(166, 18, 56, 0.45);
+}
+
+.login-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ---------- Spinner ---------- */
+.login-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(254, 243, 226, 0.3);
+  border-top-color: #fef3e2;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Footer note ---------- */
+.login-footer-note {
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(254, 243, 226, 0.28);
+  margin: 1.2rem 0 0;
+  line-height: 1.4;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 2rem 1.4rem 1.6rem;
+    border-radius: 16px;
+  }
+  .login-title {
+    font-size: 1.3rem;
+  }
+}
+

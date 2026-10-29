@@ -1,0 +1,609 @@
+/* ==========================================================================
+   RoseGardenScene.css — Project AMMA: The Interactive Rose Garden
+   Deep Midnight, Velvety Burgundy, Warm Gold & Floral Glow
+   ========================================================================== */
+
+.rose-garden-container {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.5rem 3.5rem;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+/* Garden Ambient Lighting */
+.garden-ambient-lighting {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(166, 18, 56, 0.22) 0%, transparent 60%),
+    radial-gradient(circle at 15% 55%, rgba(128, 14, 43, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 85% 65%, rgba(212, 175, 55, 0.09) 0%, transparent 50%),
+    linear-gradient(180deg, #070308 0%, #0d040e 50%, #050206 100%);
+}
+
+/* --------------------------------------------------------------------------
+   Garden Top Navigation & Header
+   -------------------------------------------------------------------------- */
+.garden-header-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.garden-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.garden-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 9999px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.garden-back-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--gold-warm);
+  border-color: rgba(212, 175, 55, 0.4);
+  transform: translateX(-2px);
+}
+
+.garden-back-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--gold-warm);
+}
+
+.garden-sanctuary-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(26, 8, 16, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  color: var(--gold-warm);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.garden-main-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #fff9f0;
+  line-height: 1.2;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 0 35px rgba(217, 37, 80, 0.2);
+}
+
+.garden-main-title em {
+  font-style: italic;
+  color: var(--rose-blush);
+  background: linear-gradient(135deg, #ffd3de 10%, #f4728f 60%, #e6395e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.garden-description {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 620px;
+  margin: 0 auto 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Progress Tracker
+   -------------------------------------------------------------------------- */
+.garden-progress-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(22, 7, 15, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.progress-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progress-count-text {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--gold-warm);
+}
+
+.progress-track-bar {
+  width: 220px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #f7d070, #ff8da1);
+  border-radius: 9999px;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Rose Garden Grid
+   -------------------------------------------------------------------------- */
+.roses-garden-grid {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .roses-garden-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .roses-garden-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Individual Garden Rose Item
+   -------------------------------------------------------------------------- */
+.garden-rose-item {
+  position: relative;
+  background: rgba(22, 7, 16, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 1.5rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.35s var(--ease-cinematic);
+}
+
+.garden-rose-item:hover {
+  background: rgba(36, 10, 24, 0.75);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 25px rgba(217, 37, 80, 0.25);
+}
+
+.garden-rose-item:focus-visible {
+  border-color: var(--gold-warm);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.5);
+}
+
+.garden-rose-item.is-bloomed {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: linear-gradient(180deg, rgba(38, 11, 24, 0.75) 0%, rgba(19, 5, 13, 0.85) 100%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.rose-glow-aura {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.5s ease;
+}
+
+.glow-unopened {
+  background: radial-gradient(circle, rgba(166, 18, 56, 0.35) 0%, transparent 70%);
+  filter: blur(18px);
+  opacity: 0.5;
+}
+
+.glow-opened {
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, rgba(217, 37, 80, 0.25) 50%, transparent 75%);
+  filter: blur(20px);
+  opacity: 0.85;
+}
+
+.rose-graphic-wrapper {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
+}
+
+.garden-rose-svg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s ease;
+}
+
+.garden-rose-item:hover .garden-rose-svg {
+  transform: scale(1.08);
+}
+
+.rose-info-badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rose-numeral-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+}
+
+.garden-rose-item.is-bloomed .rose-numeral-pill {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(212, 175, 55, 0.4);
+  color: var(--gold-warm);
+}
+
+.rose-check-icon {
+  color: var(--gold-warm);
+  display: flex;
+}
+
+.rose-sparkle-icon {
+  color: var(--rose-blush);
+  opacity: 0.8;
+  display: flex;
+}
+
+.rose-card-title {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  color: #fff2f5;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Completion Banner (Unlocked when 10/10 discovered)
+   -------------------------------------------------------------------------- */
+.garden-completion-banner {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  width: 100%;
+  margin: 3.5rem auto 1rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, rgba(46, 9, 24, 0.85) 0%, rgba(18, 5, 14, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), 0 0 50px rgba(212, 175, 55, 0.2);
+  text-align: center;
+}
+
+.completion-emblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--gold-warm);
+  margin-bottom: 1.25rem;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.35);
+}
+
+.completion-message {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+  color: #fff9f0;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.85rem;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+}
+
+.completion-subtext {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--rose-blush);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 540px;
+  margin: 0 auto 2rem;
+}
+
+.stage-transition-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.95rem 2.25rem;
+  background: linear-gradient(135deg, #ffe296 0%, #d4af37 50%, #b88a1e 100%);
+  border: 1px solid rgba(255, 240, 190, 0.6);
+  border-radius: 9999px;
+  color: #1a060d;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(212, 175, 55, 0.35);
+  transition: all 0.35s ease;
+  outline: none;
+}
+
+.stage-transition-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(212, 175, 55, 0.5);
+}
+
+.stage-transition-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 235, 180, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   Message Modal Styles
+   -------------------------------------------------------------------------- */
+.rose-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 2, 6, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.rose-modal-card {
+  position: relative;
+  max-width: 540px;
+  width: 100%;
+  background: linear-gradient(165deg, rgba(34, 8, 20, 0.95) 0%, rgba(14, 4, 11, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 28px;
+  padding: 2.75rem 2.25rem 2.25rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(217, 37, 80, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-close-icon-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.modal-close-icon-btn:hover {
+  background: rgba(217, 37, 80, 0.2);
+  color: #ffffff;
+  border-color: rgba(217, 37, 80, 0.5);
+  transform: rotate(90deg);
+}
+
+.modal-close-icon-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--gold-warm);
+}
+
+.modal-ambient-glow {
+  position: absolute;
+  top: 35%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 37, 80, 0.3) 0%, rgba(212, 175, 55, 0.15) 50%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.modal-rose-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-warm);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.modal-rose-emblem {
+  position: relative;
+  z-index: 1;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1rem;
+}
+
+.modal-emblem-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-rose-title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fff9f0;
+  margin-bottom: 1.25rem;
+}
+
+.modal-rose-message {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 3.2vw, 1.7rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #fff8e8;
+  margin: 0 0 1.75rem;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  padding: 0 0.5rem;
+}
+
+.modal-signature {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--gold-warm);
+  margin-bottom: 2rem;
+}
+
+.signature-heart {
+  color: #d92550;
+}
+
+.modal-return-btn {
+  position: relative;
+  z-index: 1;
+  padding: 0.85rem 2rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 9999px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.modal-return-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-warm);
+  color: var(--gold-warm);
+  transform: translateY(-1px);
+}
+
+.modal-return-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--gold-warm);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced Motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .garden-rose-svg,
+  .garden-rose-item,
+  .progress-fill-bar {
+    transition: none !important;
+  }
+}
