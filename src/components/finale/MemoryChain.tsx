@@ -24,6 +24,7 @@ import {
 } from '../../types/memory';
 import { EditableText } from '../common/EditableText';
 import { useWish } from '../../context/useWish';
+import { compressImage } from '../../utils/imageCompressor';
 import './MemoryChain.css';
 
 interface MemoryChainProps {
@@ -31,23 +32,13 @@ interface MemoryChainProps {
 }
 
 export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false }) => {
-  const { config, updateSection, isReadOnly } = useWish();
+  const { config, updateSection, updateMemories, isReadOnly } = useWish();
 
-  // Load saved memories from localStorage or use initial set
-  const [memories, setMemories] = useState<MemoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('project_amma_memories_dynamic');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed.length <= MAX_MEMORIES) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Fallback
-    }
-    return INITIAL_MEMORIES;
-  });
+  // Memories are centrally managed in WishConfig so they are embedded directly into shareable links
+  const memories: MemoryItem[] =
+    config.finale.memories && config.finale.memories.length > 0
+      ? config.finale.memories
+      : INITIAL_MEMORIES;
 
   const [activeMemoryIndex, setActiveMemoryIndex] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'chain' | 'grid'>('chain');
@@ -81,31 +72,33 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
     }, 4500);
   };
 
-  // Handle single photo replacement
-  const handleSinglePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle single photo replacement with client-side compression
+  const handleSinglePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !targetUploadId) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
+    try {
+      showNotification('Optimizing photo for your surprise link...');
+      const dataUrl = await compressImage(file, { maxDimension: 420, quality: 0.65 });
       const uploadedId = targetUploadId;
       setFailedImages((prev) => {
         const next = new Set(prev);
         next.delete(uploadedId);
         return next;
       });
-      setMemories((prev) =>
-        prev.map((m) => (m.id === uploadedId ? { ...m, imageSrc: dataUrl } : m))
-      );
+      const updated = memories.map((m) => (m.id === uploadedId ? { ...m, imageSrc: dataUrl } : m));
+      updateMemories(updated);
       setTargetUploadId(null);
-    };
-    reader.readAsDataURL(file);
+      showNotification('Photo saved into your surprise link!');
+    } catch (err) {
+      console.error('Photo optimization failed', err);
+      showNotification('Could not process this image. Please choose another.');
+    }
     e.target.value = '';
   };
 
   // Handle batch selection: dynamically sets photo count to exactly how many were picked (max 25)
-  const handleBatchPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBatchPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -115,33 +108,34 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
     if (totalSelected > MAX_MEMORIES) {
       showNotification(`Maximum limit is ${MAX_MEMORIES} photos. The first ${MAX_MEMORIES} photos were selected.`);
     } else {
-      showNotification(`Added ${allowedFiles.length} photo${allowedFiles.length > 1 ? 's' : ''} to ${config.meta.recipientName}'s memory chain!`);
+      showNotification(`Optimizing ${allowedFiles.length} photo${allowedFiles.length > 1 ? 's' : ''} for your surprise link...`);
     }
 
-    const newMemories: MemoryItem[] = [];
-    let processed = 0;
+    try {
+      const maxDim = allowedFiles.length > 6 ? 340 : 420;
+      const quality = allowedFiles.length > 6 ? 0.58 : 0.65;
 
-    allowedFiles.forEach((file, idx) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string;
-        const item = createMemoryItem(idx, dataUrl);
-        newMemories[idx] = item;
-        processed++;
+      const compressedUrls = await Promise.all(
+        allowedFiles.map((file) => compressImage(file, { maxDimension: maxDim, quality }))
+      );
 
-        if (processed === allowedFiles.length) {
-          setMemories(newMemories);
-          setFailedImages(new Set());
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+      const newMemories: MemoryItem[] = compressedUrls.map((dataUrl, idx) =>
+        createMemoryItem(idx, dataUrl)
+      );
+
+      updateMemories(newMemories);
+      setFailedImages(new Set());
+      showNotification(`Saved ${allowedFiles.length} photo${allowedFiles.length > 1 ? 's' : ''} to ${config.meta.recipientName}'s surprise link!`);
+    } catch (err) {
+      console.error('Batch upload optimization failed', err);
+      showNotification('Could not process some photos.');
+    }
 
     e.target.value = '';
   };
 
   // Handle appending additional photos up to 25
-  const handleAppendPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAppendPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -155,23 +149,26 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
     }
 
     const allowedFiles = Array.from(files).slice(0, remainingSlots);
+    showNotification(`Optimizing ${allowedFiles.length} new photo${allowedFiles.length > 1 ? 's' : ''}...`);
 
-    if (files.length > remainingSlots) {
-      showNotification(`Only ${remainingSlots} more photo${remainingSlots > 1 ? 's' : ''} could be added to reach the maximum of ${MAX_MEMORIES}.`);
-    } else {
-      showNotification(`Added ${allowedFiles.length} new photo${allowedFiles.length > 1 ? 's' : ''}!`);
+    try {
+      const maxDim = (currentCount + allowedFiles.length) > 6 ? 340 : 420;
+      const quality = (currentCount + allowedFiles.length) > 6 ? 0.58 : 0.65;
+
+      const compressedUrls = await Promise.all(
+        allowedFiles.map((file) => compressImage(file, { maxDimension: maxDim, quality }))
+      );
+
+      const appendedItems: MemoryItem[] = compressedUrls.map((dataUrl, idx) =>
+        createMemoryItem(currentCount + idx, dataUrl)
+      );
+
+      updateMemories([...memories, ...appendedItems]);
+      showNotification(`Added ${allowedFiles.length} new photo${allowedFiles.length > 1 ? 's' : ''} to surprise link!`);
+    } catch (err) {
+      console.error('Append upload optimization failed', err);
+      showNotification('Could not process some photos.');
     }
-
-    allowedFiles.forEach((file, idx) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string;
-        const newIndex = currentCount + idx;
-        const item = createMemoryItem(newIndex, dataUrl);
-        setMemories((prev) => (prev.length < MAX_MEMORIES ? [...prev, item] : prev));
-      };
-      reader.readAsDataURL(file);
-    });
 
     e.target.value = '';
   };
@@ -182,7 +179,8 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
       showNotification('At least one memory photo must remain on the chain.');
       return;
     }
-    setMemories((prev) => prev.filter((m) => m.id !== id));
+    const filtered = memories.filter((m) => m.id !== id);
+    updateMemories(filtered);
     if (activeMemoryIndex !== null && activeMemoryIndex >= memories.length - 1) {
       setActiveMemoryIndex(Math.max(0, memories.length - 2));
     }
@@ -234,15 +232,14 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
 
   const handleSaveMemoryNote = () => {
     if (!activeMemory) return;
-    setMemories((prev) =>
-      prev.map((m) =>
-        m.id === activeMemory.id
-          ? { ...m, title: editTitle, subtitle: editSubtitle, caption: editCaption }
-          : m
-      )
+    const updated = memories.map((m) =>
+      m.id === activeMemory.id
+        ? { ...m, title: editTitle, subtitle: editSubtitle, caption: editCaption }
+        : m
     );
+    updateMemories(updated);
     setIsEditingNote(false);
-    showNotification('Memory note updated!');
+    showNotification('Memory note updated and saved to link!');
   };
 
   return (

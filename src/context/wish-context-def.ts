@@ -1,11 +1,13 @@
 import { createContext } from 'react';
 import type { WishConfig, RoseWishItem } from '../types/wish';
+import type { MemoryItem } from '../types/memory';
 
 export interface WishContextType {
   config: WishConfig;
   updateConfig: (updater: (prev: WishConfig) => WishConfig) => void;
   updateSection: <K extends keyof WishConfig>(section: K, data: Partial<WishConfig[K]>) => void;
   updateRose: (id: number, data: Partial<RoseWishItem>) => void;
+  updateMemories: (memories: MemoryItem[]) => void;
   updateLetterParagraph: (index: number, text: string) => void;
   addLetterParagraph: (text?: string) => void;
   removeLetterParagraph: (index: number) => void;

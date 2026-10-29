@@ -7,6 +7,7 @@ import {
   type WishConfig,
   type RoseWishItem,
 } from '../types/wish';
+import type { MemoryItem } from '../types/memory';
 import { WishContext } from './wish-context-def';
 
 const STORAGE_KEY = 'amma_custom_wish_v2';
@@ -48,6 +49,21 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
             gardenOverrides.completionButtonText = DEFAULT_WISH_CONFIG.garden.completionButtonText;
           }
 
+          let initialMemories = parsed.finale?.memories;
+          if (!Array.isArray(initialMemories) || initialMemories.length === 0) {
+            try {
+              const legacyMem = localStorage.getItem('project_amma_memories_dynamic');
+              if (legacyMem) {
+                const parsedMem = JSON.parse(legacyMem);
+                if (Array.isArray(parsedMem) && parsedMem.length > 0) {
+                  initialMemories = parsedMem;
+                }
+              }
+            } catch {
+              // ignore
+            }
+          }
+
           return {
             meta: { ...DEFAULT_WISH_CONFIG.meta, ...(parsed.meta || {}) },
             opening: { ...DEFAULT_WISH_CONFIG.opening, ...(parsed.opening || {}) },
@@ -61,6 +77,9 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
             finale: {
               ...DEFAULT_WISH_CONFIG.finale,
               ...(parsed.finale || {}),
+              memories: Array.isArray(initialMemories)
+                ? initialMemories
+                : DEFAULT_WISH_CONFIG.finale.memories,
               letter: {
                 ...DEFAULT_WISH_CONFIG.finale.letter,
                 ...(parsed.finale?.letter || {}),
@@ -158,6 +177,16 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
       garden: {
         ...prev.garden,
         roses: prev.garden.roses.map((r) => (r.id === id ? { ...r, ...data } : r)),
+      },
+    }));
+  }, []);
+
+  const updateMemories = useCallback((memories: MemoryItem[]) => {
+    setConfig((prev) => ({
+      ...prev,
+      finale: {
+        ...prev.finale,
+        memories,
       },
     }));
   }, []);
@@ -265,6 +294,9 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
             finale: {
               ...DEFAULT_WISH_CONFIG.finale,
               ...(parsed.finale || {}),
+              memories: Array.isArray(parsed.finale?.memories)
+                ? parsed.finale.memories
+                : DEFAULT_WISH_CONFIG.finale.memories,
               letter: {
                 ...DEFAULT_WISH_CONFIG.finale.letter,
                 ...(parsed.finale?.letter || {}),
@@ -304,6 +336,7 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateConfig,
         updateSection,
         updateRose,
+        updateMemories,
         updateLetterParagraph,
         addLetterParagraph,
         removeLetterParagraph,

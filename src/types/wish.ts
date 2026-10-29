@@ -1,4 +1,6 @@
 import { GARDEN_ROSES, type GardenRoseData } from './garden';
+import { INITIAL_MEMORIES, type MemoryItem } from './memory';
+import LZString from 'lz-string';
 
 export interface RoseWishItem {
   id: number;
@@ -60,6 +62,7 @@ export interface FinaleSceneConfig {
   finalQuote: string;
   returnButtonText: string;
   replayButtonText: string;
+  memories?: MemoryItem[];
 }
 
 export interface WishConfig {
@@ -131,6 +134,7 @@ export const DEFAULT_WISH_CONFIG: WishConfig = {
     finalQuote: "Amma's love is a gift I will carry for my entire life.",
     returnButtonText: 'Revisit Your Rose Garden',
     replayButtonText: 'Replay Experience',
+    memories: INITIAL_MEMORIES,
   },
 };
 
@@ -217,12 +221,15 @@ export function applyQuickPersonalization(
 
 /**
  * Serialization helpers for URL sharing and storage.
+ * Uses lz-string for highly efficient compression, allowing photos and
+ * customizations to be embedded directly into compact, shareable URLs.
  */
 export function serializeWishConfig(config: WishConfig): string {
   try {
     const jsonStr = JSON.stringify(config);
-    // Use UTF-8 safe base64
-    return btoa(encodeURIComponent(jsonStr));
+    // Compress to a safe URL-encoded ASCII string
+    const compressed = LZString.compressToEncodedURIComponent(jsonStr);
+    return `lz_${compressed}`;
   } catch (err) {
     console.error('Error serializing wish config', err);
     return '';
@@ -232,18 +239,31 @@ export function serializeWishConfig(config: WishConfig): string {
 export function deserializeWishConfig(encoded: string): WishConfig | null {
   try {
     let clean = encoded.trim();
-    // Normalize spaces back to plus signs (common in email clients and query strings)
-    clean = clean.replace(/ /g, '+');
-    // If it was percent-encoded by a messaging app or browser, decode that first
-    if (clean.includes('%')) {
+    let jsonStr: string | null = null;
+
+    if (clean.startsWith('lz_')) {
+      const payload = clean.slice(3);
+      jsonStr = LZString.decompressFromEncodedURIComponent(payload);
+    } else {
+      // Legacy fallback (atob / decodeURIComponent)
+      clean = clean.replace(/ /g, '+');
+      if (clean.includes('%')) {
+        try {
+          clean = decodeURIComponent(clean);
+        } catch {
+          // Continue
+        }
+      }
       try {
-        clean = decodeURIComponent(clean);
+        jsonStr = decodeURIComponent(atob(clean));
       } catch {
-        // Continue with clean as is
+        jsonStr = LZString.decompressFromEncodedURIComponent(clean);
       }
     }
-    const jsonStr = decodeURIComponent(atob(clean));
+
+    if (!jsonStr) return null;
     const parsed = JSON.parse(jsonStr);
+
     // Merge safely with DEFAULT_WISH_CONFIG to handle partial data
     return {
       meta: { ...DEFAULT_WISH_CONFIG.meta, ...(parsed.meta || {}) },
@@ -258,6 +278,9 @@ export function deserializeWishConfig(encoded: string): WishConfig | null {
       finale: {
         ...DEFAULT_WISH_CONFIG.finale,
         ...(parsed.finale || {}),
+        memories: Array.isArray(parsed.finale?.memories)
+          ? parsed.finale.memories
+          : DEFAULT_WISH_CONFIG.finale.memories,
         letter: {
           ...DEFAULT_WISH_CONFIG.finale.letter,
           ...(parsed.finale?.letter || {}),
