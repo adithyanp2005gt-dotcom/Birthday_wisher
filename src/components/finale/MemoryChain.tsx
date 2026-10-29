@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Edit3,
   Check,
+  RotateCcw,
 } from 'lucide-react';
 import {
   MAX_MEMORIES,
@@ -56,14 +57,14 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
   const appendFileInputRef = useRef<HTMLInputElement | null>(null);
   const [targetUploadId, setTargetUploadId] = useState<string | null>(null);
 
-  // Sync to localStorage
+  // Clean up any legacy dynamic memories from localStorage so editable site stays clean
   useEffect(() => {
     try {
-      localStorage.setItem('project_amma_memories_dynamic', JSON.stringify(memories));
+      localStorage.removeItem('project_amma_memories_dynamic');
     } catch {
-      // Storage quota or disabled
+      // ignore
     }
-  }, [memories]);
+  }, []);
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -373,6 +374,22 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
             >
               <Plus size={14} />
               <span>Add Photos</span>
+            </button>
+          )}
+
+          {/* Reset Photos back to clean default template */}
+          {!isReadOnly && (
+            <button
+              type="button"
+              className="append-photo-pill-btn"
+              onClick={() => {
+                updateMemories(INITIAL_MEMORIES);
+                showNotification('Photos reset to default template.');
+              }}
+              title="Reset photos back to clean default template"
+            >
+              <RotateCcw size={13} />
+              <span>Reset Photos</span>
             </button>
           )}
         </div>

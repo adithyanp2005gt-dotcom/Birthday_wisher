@@ -33,7 +33,14 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.warn('Could not parse wish from URL', e);
     }
 
-    // 2. Try localStorage
+    // Clean up any legacy dynamic memories stored in local storage
+    try {
+      localStorage.removeItem('project_amma_memories_dynamic');
+    } catch {
+      // ignore
+    }
+
+    // 2. Try localStorage (for creator text changes, but photos are never stored permanently)
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -49,21 +56,6 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
             gardenOverrides.completionButtonText = DEFAULT_WISH_CONFIG.garden.completionButtonText;
           }
 
-          let initialMemories = parsed.finale?.memories;
-          if (!Array.isArray(initialMemories) || initialMemories.length === 0) {
-            try {
-              const legacyMem = localStorage.getItem('project_amma_memories_dynamic');
-              if (legacyMem) {
-                const parsedMem = JSON.parse(legacyMem);
-                if (Array.isArray(parsedMem) && parsedMem.length > 0) {
-                  initialMemories = parsedMem;
-                }
-              }
-            } catch {
-              // ignore
-            }
-          }
-
           return {
             meta: { ...DEFAULT_WISH_CONFIG.meta, ...(parsed.meta || {}) },
             opening: { ...DEFAULT_WISH_CONFIG.opening, ...(parsed.opening || {}) },
@@ -77,9 +69,8 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
             finale: {
               ...DEFAULT_WISH_CONFIG.finale,
               ...(parsed.finale || {}),
-              memories: Array.isArray(initialMemories)
-                ? initialMemories
-                : DEFAULT_WISH_CONFIG.finale.memories,
+              // The editable site always starts with clean default template photos (not permanent)
+              memories: DEFAULT_WISH_CONFIG.finale.memories,
               letter: {
                 ...DEFAULT_WISH_CONFIG.finale.letter,
                 ...(parsed.finale?.letter || {}),
@@ -144,11 +135,19 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 4000);
   }, []);
 
-  // Save changes to localStorage only when in creator / editing mode (not when viewing someone's generated link)
+  // Save changes to localStorage only when in creator / editing mode
+  // Exclude memories so uploaded pictures are NEVER permanently saved to the editable site
   useEffect(() => {
     if (isReadOnly) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+      const configToPersist = {
+        ...config,
+        finale: {
+          ...config.finale,
+          memories: undefined, // uploaded pictures are for link generation only, not permanent storage
+        },
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(configToPersist));
     } catch (e) {
       console.warn('Could not save wish configuration', e);
     }
@@ -262,6 +261,7 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetToDefault = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('project_amma_memories_dynamic');
       if (window.location.hash) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
       }
@@ -269,7 +269,7 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Ignored
     }
     setConfig(DEFAULT_WISH_CONFIG);
-    showToast('Original Ammachi mon default content restored.');
+    showToast('Original default content restored.');
   }, [showToast]);
 
   const exportAsJson = useCallback(() => {
