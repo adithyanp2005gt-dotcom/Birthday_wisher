@@ -80,7 +80,7 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
 
     try {
       showNotification('Optimizing photo for your surprise link...');
-      const dataUrl = await compressImage(file, { maxDimension: 420, quality: 0.65 });
+      const dataUrl = await compressImage(file, { maxDimension: 280, quality: 0.55 });
       const uploadedId = targetUploadId;
       setFailedImages((prev) => {
         const next = new Set(prev);
@@ -113,8 +113,8 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
     }
 
     try {
-      const maxDim = allowedFiles.length > 6 ? 340 : 420;
-      const quality = allowedFiles.length > 6 ? 0.58 : 0.65;
+      const maxDim = 260;
+      const quality = 0.52;
 
       const compressedUrls = await Promise.all(
         allowedFiles.map((file) => compressImage(file, { maxDimension: maxDim, quality }))
@@ -153,8 +153,8 @@ export const MemoryChain: React.FC<MemoryChainProps> = ({ reducedMotion = false 
     showNotification(`Optimizing ${allowedFiles.length} new photo${allowedFiles.length > 1 ? 's' : ''}...`);
 
     try {
-      const maxDim = (currentCount + allowedFiles.length) > 6 ? 340 : 420;
-      const quality = (currentCount + allowedFiles.length) > 6 ? 0.58 : 0.65;
+      const maxDim = 260;
+      const quality = 0.52;
 
       const compressedUrls = await Promise.all(
         allowedFiles.map((file) => compressImage(file, { maxDimension: maxDim, quality }))

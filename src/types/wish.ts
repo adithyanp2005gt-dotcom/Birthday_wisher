@@ -239,21 +239,34 @@ export function serializeWishConfig(config: WishConfig): string {
 export function deserializeWishConfig(encoded: string): WishConfig | null {
   try {
     let clean = encoded.trim();
+
+    // Decode any percent-encoding (%2B for '+', %20 for ' ', etc.) from browsers / messaging apps
+    if (clean.includes('%')) {
+      try {
+        clean = decodeURIComponent(clean);
+      } catch {
+        // Continue
+      }
+    }
+
+    // Normalize any spaces back to plus signs (common in query strings & messaging apps)
+    clean = clean.replace(/ /g, '+');
+
     let jsonStr: string | null = null;
 
     if (clean.startsWith('lz_')) {
       const payload = clean.slice(3);
       jsonStr = LZString.decompressFromEncodedURIComponent(payload);
-    } else {
-      // Legacy fallback (atob / decodeURIComponent)
-      clean = clean.replace(/ /g, '+');
-      if (clean.includes('%')) {
+      // If decompress failed, try with URI decode on payload
+      if (!jsonStr) {
         try {
-          clean = decodeURIComponent(clean);
+          jsonStr = LZString.decompressFromEncodedURIComponent(decodeURIComponent(payload));
         } catch {
-          // Continue
+          // ignore
         }
       }
+    } else {
+      // Legacy fallback (atob / decodeURIComponent)
       try {
         jsonStr = decodeURIComponent(atob(clean));
       } catch {

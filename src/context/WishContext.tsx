@@ -17,16 +17,23 @@ export const WishProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [config, setConfig] = useState<WishConfig>(() => {
     // 1. Try URL Hash or Query param first
     try {
+      let rawWish: string | null = null;
       const hash = window.location.hash;
-      if (hash.startsWith('#wish=')) {
-        const encoded = hash.slice(6);
-        const parsed = deserializeWishConfig(encoded);
-        if (parsed) return parsed;
+      if (hash.includes('wish=')) {
+        const match = hash.match(/wish=([^&]+)/);
+        if (match) rawWish = match[1];
       }
-      const searchParams = new URLSearchParams(window.location.search);
-      const queryWish = searchParams.get('wish');
-      if (queryWish) {
-        const parsed = deserializeWishConfig(queryWish);
+      if (!rawWish) {
+        const searchParams = new URLSearchParams(window.location.search);
+        rawWish = searchParams.get('wish');
+      }
+      if (!rawWish && window.location.href.includes('wish=')) {
+        const match = window.location.href.match(/wish=([^&#]+)/);
+        if (match) rawWish = match[1];
+      }
+
+      if (rawWish) {
+        const parsed = deserializeWishConfig(rawWish);
         if (parsed) return parsed;
       }
     } catch (e) {
